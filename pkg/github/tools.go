@@ -82,6 +82,10 @@ func InitToolsets(passedToolsets []string, readOnly bool, getClient GetClientFn,
 			toolsets.NewServerTool(GetSecretScanningAlert(getClient, t)),
 			toolsets.NewServerTool(ListSecretScanningAlerts(getClient, t)),
 		)
+	dependencies := toolsets.NewToolset("dependencies", "Dependency management related tools, such as GitHub Dependency Review").
+		AddReadTools(
+			toolsets.NewServerTool(GetDependencyReviewCompare(getClient, t)),
+		)
 	// Keep experiments alive so the system doesn't error out when it's always enabled
 	experiments := toolsets.NewToolset("experiments", "Experimental features that are not considered stable yet")
 
@@ -92,6 +96,7 @@ func InitToolsets(passedToolsets []string, readOnly bool, getClient GetClientFn,
 	tsg.AddToolset(pullRequests)
 	tsg.AddToolset(codeSecurity)
 	tsg.AddToolset(secretProtection)
+	tsg.AddToolset(dependencies)
 	tsg.AddToolset(experiments)
 	// Enable the requested features
 
